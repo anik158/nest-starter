@@ -1,5 +1,6 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post, Body } from '@nestjs/common';
 import { AppService } from './app.service';
+import { CreateUserDto } from './create-user.dto';
 
 @Controller()
 export class AppController {
@@ -9,4 +10,9 @@ export class AppController {
   getHello() {
     return this.appService.getHello();
   }
+
+  @Post()
+  createUser(@Body() payload: CreateUserDto) {
+    return payload;
+  } 
 }
