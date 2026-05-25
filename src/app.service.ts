@@ -1,15 +1,22 @@
 import { Injectable } from '@nestjs/common';
+import { LoggerService } from './core/logger/logger.service';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AppService {
 
-  constructor(private readonly configService: ConfigService) {
+  private context = 'AppService.getHello';
+
+  constructor(private readonly logger: LoggerService, private readonly configService: ConfigService) {
 
   }
   getHello() {
-      const environmentVariable = this.configService.get('environement') ;
-      console.log(`Current environment: ${environmentVariable}`);
+
+      
+      this.logger.log('Calling from getHelp method', this.context, { additional: 'Additional log data' });
+      const environmentVariable = this.configService.get('environment') ;
+
+       console.log(`Current environment: ${environmentVariable}`);
       // return {
       //   data: 'Hello World!',
       //   meta: {
@@ -17,7 +24,8 @@ export class AppService {
       //   },
       // };
 
-      return undefined;
+      // return undefined;
+
       return 'Hello World!';
 
 
