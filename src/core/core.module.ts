@@ -4,6 +4,7 @@ import config from '../config';
 import { TransformResponseInterceptor } from './interceptors/transform-response/transform-response.interceptor';
 import { LoggerService } from './logger/logger.service';
 import { LoggerMiddleware } from './middleware/logger/logger.middleware';
+import { DatabaseService } from 'src/database/database.service';
 
 @Global()
 @Module({
@@ -18,8 +19,9 @@ import { LoggerMiddleware } from './middleware/logger/logger.middleware';
          useClass: TransformResponseInterceptor,
       },
      LoggerService,
+     DatabaseService,
    ],
-  exports: [LoggerService],
+  exports: [LoggerService, DatabaseService],
 })
 export class CoreModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
