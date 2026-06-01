@@ -22,12 +22,10 @@ import { redisStore } from 'cache-manager-redis-yet';
       useFactory: async (configService: ConfigService) => ({
         store: await redisStore({
           socket: {
-            host: configService.get('redis.host'),
-            port: configService.get('redis.port'),
+            host: configService.get('redis.host', 'localhost'),
+            port: configService.get('redis.port', 6380),
           },
-          // username: configService.get('redis.username'),
-          // password: configService.get('redis.password'),
-          ttl: 60 * 1000, // 60 seconds
+          ttl: 60 * 1000,           // default TTL
         }),
       }),
       inject: [ConfigService],
