@@ -5,8 +5,9 @@ import { TransformResponseInterceptor } from './interceptors/transform-response/
 import { LoggerService } from './logger/logger.service';
 import { LoggerMiddleware } from './middleware/logger/logger.middleware';
 import { DatabaseService } from 'src/database/database.service';
-import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
-import { redisStore } from 'cache-manager-redis-yet';
+import { CacheModule } from '@nestjs/cache-manager';
+import { createKeyv } from '@keyv/redis';
+import { CacheService } from './cache/cache.service';
 
 @Global()
 @Module({
@@ -20,14 +21,11 @@ import { redisStore } from 'cache-manager-redis-yet';
       isGlobal: true,
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        store: await redisStore({
-          socket: {
-            host: configService.get('redis.host', 'localhost'),
-            port: configService.get('redis.port', 6380),
-          },
-          ttl: 60 * 1000,           // default TTL
-        }),
-      }),
+    stores: [
+      await createKeyv(`redis://${configService.get('redis.host', 'localhost')}:${configService.get('redis.port', 6380)}`)
+    ],
+    ttl: 60 * 1000, // 60 seconds
+  }),
       inject: [ConfigService],
     }),
   ],
@@ -39,12 +37,9 @@ import { redisStore } from 'cache-manager-redis-yet';
     },
     LoggerService,
     DatabaseService,
-    {
-      provide: 'APP_INTERCEPTOR',
-      useClass: CacheInterceptor,
-    },
+    CacheService,
   ],
-  exports: [LoggerService, DatabaseService],
+  exports: [LoggerService, DatabaseService, CacheService],
 })
 export class CoreModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
