@@ -23,6 +23,7 @@
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
     "noUncheckedIndexedAccess": true,
-    
-  },
+    "types": ["jest", "node"],
+    "typeRoots": ["./node_modules/@types"]
+  }
 }

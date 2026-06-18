@@ -1,14 +1,12 @@
-import { Controller, Get, Post, Body, Inject } from '@nestjs/common';
+import { Controller, Get, Post, Body } from '@nestjs/common';
 import { AppService } from './app.service';
 import { CreateUserDto } from './create-user.dto';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import type { Cache } from 'cache-manager';
+
 
 @Controller()
 export class AppController {
   constructor(
-    private readonly appService: AppService,
-    @Inject(CACHE_MANAGER) private cacheManager: Cache
+    private readonly appService: AppService
   ) { }
 
   @Get()
