@@ -14,7 +14,7 @@ export class AppService {
               private readonly databaseService: DatabaseService,
               private readonly cacheService: CacheService) {}
       
-  getHello() {
+  async getHello() {
       this.logger.log('Calling from getHelp method', this.context, { additional: 'Additional log data' });
       const environmentVariable = this.configService.get('environment') ;
 
@@ -27,9 +27,11 @@ export class AppService {
       // };
 
       // return undefined;
-      this.databaseService.user.findMany().then(users => {}).catch(error => {
-        this.logger.error('Database error', error.stack, this.context, { additional: 'Additional log data' });
-      });
+      try {
+        await this.databaseService.user.findMany();
+      } catch (error) {
+        this.logger.error('Database error', (error as Error).stack, this.context, { additional: 'Additional log data' });
+      }
 
       return 'Hello World!';
   }
